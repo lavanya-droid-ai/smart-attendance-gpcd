@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: smart-attendance-gpcd
+    runtime: node
+    buildCommand: npm run render:build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: BLE_TOKEN_EXPIRY
+        value: 3600
+      - key: NFC_TOKEN_EXPIRY
+        value: 3600
+      - key: CORS_ORIGIN
+        sync: false
