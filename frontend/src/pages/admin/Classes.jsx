@@ -15,10 +15,10 @@ import {
 import toast from 'react-hot-toast';
 
 const YEARS = [
-  'First Year BPT',
-  'Second Year BPT',
-  'Third Year BPT',
-  'Final Year BPT',
+  'First Year',
+  'Second Year',
+  'Third Year',
+  'Final Year',
 ];
 
 const emptyForm = {

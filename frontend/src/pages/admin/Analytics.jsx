@@ -94,7 +94,7 @@ export default function Analytics() {
                 }
               />
             ))
-          : ['First Year BPT', 'Second Year BPT', 'Third Year BPT', 'Final Year BPT'].map(
+          : ['First Year', 'Second Year', 'Third Year', 'Final Year'].map(
               (yr, i) => (
                 <StatsCard
                   key={yr}

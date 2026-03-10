@@ -85,7 +85,7 @@ export default function ParentDashboard() {
             )}
             {ward.year && (
               <span className="flex items-center gap-1">
-                <BookOpen className="h-3.5 w-3.5" /> {ward.year} Year BPT
+                <BookOpen className="h-3.5 w-3.5" /> {ward.year} BPT
               </span>
             )}
             {ward.email && (

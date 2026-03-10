@@ -14,10 +14,10 @@ import toast from 'react-hot-toast';
 
 const ROLES = ['student', 'teacher', 'parent', 'admin'];
 const YEARS = [
-  'First Year BPT',
-  'Second Year BPT',
-  'Third Year BPT',
-  'Final Year BPT',
+  'First Year',
+  'Second Year',
+  'Third Year',
+  'Final Year',
 ];
 
 const emptyForm = {
