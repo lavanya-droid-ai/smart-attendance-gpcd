@@ -40,6 +40,18 @@ const attendanceSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    latitude: {
+      type: Number,
+      default: null,
+    },
+    longitude: {
+      type: Number,
+      default: null,
+    },
+    biometricVerified: {
+      type: Boolean,
+      default: false,
+    },
     remarks: {
       type: String,
       trim: true,

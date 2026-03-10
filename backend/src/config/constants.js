@@ -59,6 +59,13 @@ const TOKEN_TYPES = {
   SESSION: 'session',
 };
 
+const CAMPUS = {
+  CENTER_LAT: 23.04980892525792,
+  CENTER_LNG: 72.607932179558,
+  RADIUS_METERS: 500,
+  NAME: 'Govt. Physiotherapy College',
+};
+
 const SOCKET_EVENTS = {
   SESSION_STARTED: 'session:started',
   SESSION_ENDED: 'session:ended',
@@ -78,6 +85,7 @@ module.exports = {
   ALL_YEARS,
   DEPARTMENT,
   COLLEGE,
+  CAMPUS,
   DAYS_OF_WEEK,
   TOKEN_TYPES,
   SOCKET_EVENTS,

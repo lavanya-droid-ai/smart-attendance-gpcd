@@ -446,6 +446,38 @@ const removeStudent = async (req, res) => {
   }
 };
 
+const resetDevice = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+
+    const previousDeviceId = user.deviceId;
+    user.deviceId = null;
+    await user.save();
+
+    await AuditLog.log({
+      action: 'DEVICE_RESET',
+      actor: req.user._id,
+      target: `User:${user._id}`,
+      details: { previousDeviceId },
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Device binding reset successfully.',
+      data: { user },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to reset device binding.' });
+  }
+};
+
 const getAnalytics = async (req, res) => {
   try {
     const thirtyDaysAgo = new Date();
@@ -554,6 +586,7 @@ module.exports = {
   createUser,
   updateUser,
   toggleUserStatus,
+  resetDevice,
   getAllClasses,
   createClass,
   updateClass,

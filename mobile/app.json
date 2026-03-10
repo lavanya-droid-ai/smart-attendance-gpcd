@@ -1,0 +1,61 @@
+{
+  "expo": {
+    "name": "Smart Attendance",
+    "slug": "smart-attendance-gpcd",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#4338CA"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.gpcd.smartattendance",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "We need your location to verify you are on campus for attendance.",
+        "NSFaceIDUsageDescription": "We use Face ID to verify your identity for attendance.",
+        "NFCReaderUsageDescription": "We use NFC to mark attendance via tap."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#4338CA"
+      },
+      "package": "com.gpcd.smartattendance",
+      "permissions": [
+        "BLUETOOTH",
+        "BLUETOOTH_ADMIN",
+        "BLUETOOTH_SCAN",
+        "BLUETOOTH_ADVERTISE",
+        "BLUETOOTH_CONNECT",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "NFC",
+        "USE_BIOMETRIC",
+        "USE_FINGERPRINT"
+      ]
+    },
+    "plugins": [
+      "expo-location",
+      "expo-local-authentication",
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#4338CA"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "your-project-id"
+      }
+    }
+  }
+}

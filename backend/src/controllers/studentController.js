@@ -2,7 +2,9 @@ const Class = require('../models/Class');
 const Session = require('../models/Session');
 const Attendance = require('../models/Attendance');
 const AuditLog = require('../models/AuditLog');
+const User = require('../models/User');
 const { validateAttendanceToken } = require('../utils/tokenGenerator');
+const { validateCampusLocation } = require('../utils/gpsValidator');
 const {
   TOKEN_TYPES,
   ATTENDANCE_METHODS,
@@ -73,10 +75,31 @@ const getDashboard = async (req, res) => {
 const markBleAttendance = async (req, res) => {
   try {
     const studentId = req.user._id;
-    const { token, deviceId } = req.body;
+    const { token, deviceId, latitude, longitude, biometricVerified } = req.body;
 
     if (!token) {
       return res.status(400).json({ success: false, message: 'BLE token is required.' });
+    }
+
+    if (deviceId) {
+      const student = await User.findById(studentId);
+      if (student.deviceId && student.deviceId !== deviceId) {
+        return res.status(403).json({
+          success: false,
+          message: 'Device not recognized.',
+        });
+      }
+    }
+
+    if (latitude != null && longitude != null) {
+      const gpsResult = validateCampusLocation(latitude, longitude);
+      if (!gpsResult.isOnCampus) {
+        return res.status(403).json({
+          success: false,
+          message: 'You are not within campus boundaries.',
+          data: { distanceMeters: gpsResult.distanceMeters },
+        });
+      }
     }
 
     const decoded = validateAttendanceToken(token, TOKEN_TYPES.BLE);
@@ -117,6 +140,9 @@ const markBleAttendance = async (req, res) => {
       status: isLate ? ATTENDANCE_STATUS.LATE : ATTENDANCE_STATUS.PRESENT,
       isLate,
       deviceId,
+      latitude: latitude != null ? latitude : null,
+      longitude: longitude != null ? longitude : null,
+      biometricVerified: biometricVerified || false,
     });
 
     const io = req.app.get('io');
@@ -134,7 +160,7 @@ const markBleAttendance = async (req, res) => {
       action: 'BLE_ATTENDANCE_MARKED',
       actor: studentId,
       target: `Attendance:${attendance._id}`,
-      details: { sessionId: session._id, method: ATTENDANCE_METHODS.BLE, isLate },
+      details: { sessionId: session._id, method: ATTENDANCE_METHODS.BLE, isLate, biometricVerified: biometricVerified || false },
       ipAddress: req.ip,
       userAgent: req.get('user-agent'),
     });
@@ -158,10 +184,31 @@ const markBleAttendance = async (req, res) => {
 const markNfcAttendance = async (req, res) => {
   try {
     const studentId = req.user._id;
-    const { token, deviceId } = req.body;
+    const { token, deviceId, latitude, longitude, biometricVerified } = req.body;
 
     if (!token) {
       return res.status(400).json({ success: false, message: 'NFC token is required.' });
+    }
+
+    if (deviceId) {
+      const student = await User.findById(studentId);
+      if (student.deviceId && student.deviceId !== deviceId) {
+        return res.status(403).json({
+          success: false,
+          message: 'Device not recognized.',
+        });
+      }
+    }
+
+    if (latitude != null && longitude != null) {
+      const gpsResult = validateCampusLocation(latitude, longitude);
+      if (!gpsResult.isOnCampus) {
+        return res.status(403).json({
+          success: false,
+          message: 'You are not within campus boundaries.',
+          data: { distanceMeters: gpsResult.distanceMeters },
+        });
+      }
     }
 
     const decoded = validateAttendanceToken(token, TOKEN_TYPES.NFC);
@@ -202,6 +249,9 @@ const markNfcAttendance = async (req, res) => {
       status: isLate ? ATTENDANCE_STATUS.LATE : ATTENDANCE_STATUS.PRESENT,
       isLate,
       deviceId,
+      latitude: latitude != null ? latitude : null,
+      longitude: longitude != null ? longitude : null,
+      biometricVerified: biometricVerified || false,
     });
 
     const io = req.app.get('io');
@@ -219,7 +269,7 @@ const markNfcAttendance = async (req, res) => {
       action: 'NFC_ATTENDANCE_MARKED',
       actor: studentId,
       target: `Attendance:${attendance._id}`,
-      details: { sessionId: session._id, method: ATTENDANCE_METHODS.NFC, isLate },
+      details: { sessionId: session._id, method: ATTENDANCE_METHODS.NFC, isLate, biometricVerified: biometricVerified || false },
       ipAddress: req.ip,
       userAgent: req.get('user-agent'),
     });

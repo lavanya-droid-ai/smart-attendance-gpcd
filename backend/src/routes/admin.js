@@ -7,6 +7,7 @@ const {
   createUser,
   updateUser,
   toggleUserStatus,
+  resetDevice,
   getAllClasses,
   createClass,
   updateClass,
@@ -23,6 +24,7 @@ router.get('/users', getAllUsers);
 router.post('/users', createUser);
 router.put('/users/:id', updateUser);
 router.patch('/users/:id/toggle-status', toggleUserStatus);
+router.patch('/users/:id/reset-device', resetDevice);
 
 router.get('/classes', getAllClasses);
 router.post('/classes', createClass);

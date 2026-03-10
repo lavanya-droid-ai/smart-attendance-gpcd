@@ -95,7 +95,7 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, deviceId } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({
@@ -128,13 +128,30 @@ const login = async (req, res) => {
       });
     }
 
+    let deviceBound = false;
+
+    if (deviceId) {
+      if (user.deviceId && user.deviceId !== deviceId) {
+        return res.status(403).json({
+          success: false,
+          message: 'This account is bound to another device. Contact admin to reset.',
+        });
+      }
+
+      if (!user.deviceId) {
+        user.deviceId = deviceId;
+        await user.save();
+        deviceBound = true;
+      }
+    }
+
     const token = user.generateToken();
 
     await AuditLog.log({
       action: 'USER_LOGIN',
       actor: user._id,
       target: `User:${user._id}`,
-      details: { role: user.role },
+      details: { role: user.role, deviceId: deviceId || null, deviceBound },
       ipAddress: req.ip,
       userAgent: req.get('user-agent'),
     });
@@ -142,7 +159,7 @@ const login = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Login successful.',
-      data: { user, token },
+      data: { user, token, deviceBound },
     });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Login failed. Please try again.' });
