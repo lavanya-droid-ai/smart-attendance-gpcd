@@ -2,11 +2,14 @@
   "name": "smart-attendance",
   "version": "1.0.0",
   "description": "Smart Hybrid Attendance System - GPCD",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
-    "install:all": "cd backend && npm install && cd ../frontend && npm install",
-    "build": "cd frontend && npm run build",
-    "start": "cd backend && node src/server.js",
-    "seed": "cd backend && node src/seed.js",
+    "install:all": "npm install --prefix backend && npm install --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "start": "node backend/src/server.js",
+    "seed": "node backend/src/seed.js",
     "render:build": "npm run install:all && npm run build"
   }
 }
